@@ -1,6 +1,6 @@
 package_name = nginx-le
 repository = toolen/nginx-le
-version = $(shell poetry version -s)
+version = 1.0.0
 image_tag = ghcr.io/$(repository):$(version)
 hadolint_version=2.12.0
 trivy_version=0.45.1
