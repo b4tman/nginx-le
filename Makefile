@@ -6,9 +6,8 @@ hadolint_version=2.12.0
 trivy_version=0.45.1
 
 image:
-	export DOCKER_BUILDKIT=1
 	make hadolint
-	docker build --pull --no-cache -t $(image_tag) .
+	DOCKER_BUILDKIT=1 docker build --pull --no-cache -t $(image_tag) .
 	make trivy
 
 push-to-ghcr:
