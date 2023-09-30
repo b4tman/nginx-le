@@ -9,6 +9,11 @@ jobs:
     runs-on: ubuntu-latest
  
     steps:
-    - uses: actions/checkout@master
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag nginx-le:$(date +%s)
+      - name: Build image
+        run: make image
+
+      - name: Push image
+        if: ${{ github.ref_name == 'master' }}
+        env:
+          CR_PAT: ${{ secrets.CR_PAT }}
+        run: make push-to-ghcr

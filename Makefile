@@ -1,13 +1,22 @@
-GITTAG=$(shell git describe --abbrev=0 --tags)
-B=$(shell git rev-parse --abbrev-ref HEAD)
-ref=$(subst /,-,$(B))
+package_name = nginx-le
+repository = toolen/nginx-le
+version = $(shell poetry version -s)
+image_tag = ghcr.io/$(repository):$(version)
+hadolint_version=2.12.0
+trivy_version=0.45.1
 
-release_master:
-	- docker buildx build --push --platform linux/amd64,linux/arm/v7,linux/arm64 -t ghcr.io/umputun/nginx-le:${ref} -t umputun/nginx-le:${ref} .
+image:
+	export DOCKER_BUILDKIT=1
+	make hadolint
+	docker build --pull --no-cache -t $(image_tag) .
+	make trivy
 
-release_latest:
-	- docker buildx build --push --platform linux/amd64,linux/arm/v7,linux/arm64 \
- 		-t ghcr.io/umputun/nginx-le:${GITTAG} -t ghcr.io/umputun/nginx-le:latest \
- 		-t umputun/nginx-le:${GITTAG} -t umputun/nginx-le:latest .
+push-to-ghcr:
+	docker login ghcr.io -u toolen -p $(CR_PAT)
+	docker push $(image_tag)
 
-.PHONY: release
+hadolint:
+	docker run --rm -i hadolint/hadolint:$(hadolint_version) < Dockerfile
+
+trivy:
+	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v ~/.cache/trivy:/root/.cache/ aquasec/trivy:$(trivy_version) image --ignore-unfixed $(image_tag)
