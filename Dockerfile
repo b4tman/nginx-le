@@ -10,8 +10,8 @@ RUN \
  chmod +x /entrypoint.sh && \
  chmod +x /le.sh && \
  apk add --no-cache --update \
-    certbot=2.6.0-r0 \
-    tzdata=2023c-r1 \
-    openssl=3.1.3-r0
+    certbot \
+    tzdata \
+    openssl
 
 CMD ["/entrypoint.sh"]
