@@ -1,4 +1,4 @@
-FROM nginx:1.25.4-alpine3.18-slim
+FROM nginx:1.26.0-alpine3.19-slim
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
