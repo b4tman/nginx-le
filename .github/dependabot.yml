@@ -1,13 +1,27 @@
 # To get started with Dependabot version updates, you'll need to specify which
 # package ecosystems to update and where the package manifests are located.
 # Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
 updates:
-  - package-ecosystem: "docker" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
       interval: "monthly"
       timezone: "Europe/Moscow"
-      day: "saturday"     
+      day: "saturday"    
+    groups:
+      "GitHub Actions updates":
+        patterns:
+          - "*"
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      timezone: "Europe/Moscow"
+      day: "saturday"    
+    # ignore updates with odd numbers like 1.27 and 1.29 but allow 1.28 and 1.30
+    ignore:
+      - dependency-name: "nginx"
+        versions: ["1.27", "1.29", "1.31", "1.33", "1.35", "1.37", "1.39"]
